@@ -28,6 +28,18 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
 
+      - name: Show Build
+        run: |
+          echo ======================
+          ls -la
+          echo ======================
+          cd build
+          ls -la
+          echo ======================
+          cd libs
+          ls -la
+          echo ======================
+
       - name: Publish APK
         uses: actions/upload-artifact@v2
         with:
