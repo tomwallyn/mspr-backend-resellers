@@ -27,23 +27,26 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
 
-      - name: Publish APK
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-app
-          path: build/libs/*.jar
+      - name: Publish to GitHub Package
+        run: ./gradlew publish -Pversion=${{ github.sha }}
 
-      - name: Set up Google Cloud
-        uses: google-github-actions/setup-gcloud@v0.3.0
-        with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: mspr-388509
+#      - name: Publish APK
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: my-app
+#          path: build/libs/*.jar
 
-      - name: Deploy to App Engine
-        uses: google-github-actions/deploy-appengine@v0.4.0
-        with:
-          project_id: mspr-388509
-          credentials: ${{ secrets.GCP_SA_KEY }}
-          version: develop
-          promote: true
-          stop_previous_version: true
+#      - name: Set up Google Cloud
+#        uses: google-github-actions/setup-gcloud@v0.3.0
+#        with:
+#          service_account_key: ${{ secrets.GCP_SA_KEY }}
+#          project_id: mspr-388509
+#
+#      - name: Deploy to App Engine
+#        uses: google-github-actions/deploy-appengine@v0.4.0
+#        with:
+#          project_id: mspr-388509
+#          credentials: ${{ secrets.GCP_SA_KEY }}
+#          version: develop
+#          promote: true
+#          stop_previous_version: true
