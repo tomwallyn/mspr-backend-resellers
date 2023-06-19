@@ -60,12 +60,12 @@ jobs:
           MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           MY_GITHUB_ACTOR: ${{ secrets.MY_GITHUB_ACTOR }}
 
-    deploy:
-      runs-on: ubuntu-latest
-      needs: [ publish ]
-      steps:
-        - name: TODO
-          run: echo todo
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [publish]
+    steps:
+      - name: TODO
+        run: echo todo
 
 #      - name: Publish APK
 #        uses: actions/upload-artifact@v2
