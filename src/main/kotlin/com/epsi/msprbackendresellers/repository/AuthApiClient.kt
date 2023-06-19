@@ -1,5 +1,6 @@
 package com.epsi.msprbackendresellers.repository
 
+import com.epsi.msprbackendresellers.models.User
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component

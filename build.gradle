@@ -6,6 +6,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.7.22'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.7.22'
     id 'application'
+    id 'maven-publish'
 }
 
 group = 'com.epsi'
@@ -25,6 +26,9 @@ dependencies {
     implementation 'org.json:json:20210307'
     implementation 'org.springframework.data:spring-data-mongodb:4.0.4'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation("org.springdoc:springdoc-openapi-data-rest:1.4.3")
+    implementation("org.springdoc:springdoc-openapi-ui:1.4.3")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.4.3")
 }
 
 tasks.withType(KotlinCompile) {
@@ -36,4 +40,26 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+publishing {
+    repositories {
+        // The target repository
+        maven {
+            // Choose whatever name you want
+            name = "GitHubPackages"
+            // The url of the repository, where the artifacts will be published
+            url = "https://maven.pkg.github.com/tomwallyn/mspr-backend-resellers"
+            credentials {
+                // The credentials (described in the next section)
+                username = System.getenv('MY_GITHUB_ACTOR')
+                password = System.getenv('MY_GITHUB_TOKEN')
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
