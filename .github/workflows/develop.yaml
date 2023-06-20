@@ -63,10 +63,10 @@ jobs:
   sonarqube:
     name: sonarqube
     uses: ./.github/workflows/test-quality.yaml
-#    secrets:
-#      github-token: ${{ secrets.MY_GITHUB_TOKEN }}
-#      sonar-token: ${{ secrets.SONAR_TOKEN }}
-#      sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
+    secrets:
+      githubToken: ${{ secrets.MY_GITHUB_TOKEN }}
+      sonarToken: ${{ secrets.SONAR_TOKEN }}
+      sonarHostUrl: ${{ secrets.SONAR_HOST_URL }}
 
   deploy:
     runs-on: ubuntu-latest

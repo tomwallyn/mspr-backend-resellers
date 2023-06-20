@@ -2,21 +2,13 @@ name: Test quality
 
 on:
   workflow_call:
-#    secrets:
-#      sonar-token:
-#        required: true
-#        type: string
-#      github-token:
-#        required: false
-#        type: string
-#      sonar-host-url:
-#        required: false
-#        type: string
-
-env:
-  GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    secrets:
+      sonarToken:
+        required: true
+      githubToken:
+        required: true
+      sonarHostUrl:
+        required: true
 
 jobs:
   test:
@@ -80,5 +72,9 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Check code and check dependency vulnerability
+        env:
+          GITHUB_TOKEN: ${{ secrets.githubToken }}
+          SONAR_TOKEN: ${{ secrets.sonarToken }}
+          SONAR_HOST_URL: ${{ secrets.sonarHostUrl }}
         run: |
           ./gradlew build sonarqube --info
