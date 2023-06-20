@@ -2,8 +2,14 @@ name: Test quality
 
 on:
   workflow_call:
-    inputs:
-      project-name:
+    secrets:
+      sonar-token:
+        required: true
+        type: string
+      github-token:
+        required: false
+        type: string
+      sonar-host-url:
         required: false
         type: string
 
@@ -70,8 +76,8 @@ jobs:
 
       - name: Check code and check dependency vulnerability
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: 'http://92.188.98.73:9000'
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+          SONAR_TOKEN: ${{ secrets.sonar-token }}
+          SONAR_HOST_URL: ${{ secrets.sonar-host-url }}
         run: |
           ./gradlew build sonarqube --info
