@@ -8,6 +8,7 @@ plugins {
     id 'application'
     id 'maven-publish'
     id("org.sonarqube") version "3.3"
+    id 'jacoco'
 }
 
 group = 'com.epsi'
@@ -33,6 +34,21 @@ dependencies {
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
     implementation 'com.sendgrid:sendgrid-java:4.9.3'
     implementation "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
+}
+
+jacoco {
+    toolVersion = "0.8.7" // Spécifiez la version de Jacoco
+}
+
+tasks.withType(Test) {
+    finalizedBy jacocoTestReport // Génère automatiquement le rapport de couverture après les tests
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true // Génère un rapport XML
+        html.enabled true // Génère un rapport HTML
+    }
 }
 
 tasks.withType(KotlinCompile) {
@@ -71,14 +87,11 @@ publishing {
 sonarqube {
     def exclusions = [
             "**/src/test/**",
-            "**/src/main/kotlin/**/models/**",
             "**/src/main/kotlin/**/application/**",
-            "**/src/main/kotlin/**/dao/**",
             "**/src/main/kotlin/**/controllers/**",
-            "**/src/main/kotlin/**/FiscalInventoryApplication.kt",
-            "**/src/main/kotlin/**/utils/**",
-            "**/src/main/kotlin/**/extensions/**",
-            "**/src/main/kotlin/**/services/impl/PrinterServiceImpl.kt",
+            "**/src/main/kotlin/**/repository/**",
+            "**/src/main/kotlin/**/MsprBackendResellersApplication.kt",
+            "**/src/main/kotlin/**/services/impl/NotificationServiceImpl.kt",
     ]
     properties {
         property 'sonar.projectKey', 'mspr-backend-resellers'
