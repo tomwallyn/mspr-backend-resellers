@@ -7,6 +7,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.spring' version '1.7.22'
     id 'application'
     id 'maven-publish'
+    id("org.sonarqube") version "3.3"
 }
 
 group = 'com.epsi'
@@ -30,7 +31,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-ui:1.4.3")
     implementation("org.springdoc:springdoc-openapi-kotlin:1.4.3")
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
-
+    implementation 'com.sendgrid:sendgrid-java:4.9.3'
+    implementation "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
 }
 
 tasks.withType(KotlinCompile) {
@@ -63,5 +65,25 @@ publishing {
         gpr(MavenPublication) {
             from(components.java)
         }
+    }
+}
+
+sonarqube {
+    def exclusions = [
+            "**/src/test/**",
+            "**/src/main/kotlin/**/models/**",
+            "**/src/main/kotlin/**/application/**",
+            "**/src/main/kotlin/**/dao/**",
+            "**/src/main/kotlin/**/controllers/**",
+            "**/src/main/kotlin/**/FiscalInventoryApplication.kt",
+            "**/src/main/kotlin/**/utils/**",
+            "**/src/main/kotlin/**/extensions/**",
+            "**/src/main/kotlin/**/services/impl/PrinterServiceImpl.kt",
+    ]
+    properties {
+        property 'sonar.projectKey', 'mspr-backend-resellers'
+        property "sonar.coverage.exclusions", exclusions
+        property 'sonar.dependencyCheck.jsonReportPath', 'build/reports/dependency-check-report.json'
+        property 'sonar.dependencyCheck.htmlReportPath', 'build/reports/dependency-check-report.html'
     }
 }

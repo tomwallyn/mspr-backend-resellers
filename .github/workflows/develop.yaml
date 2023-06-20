@@ -60,6 +60,10 @@ jobs:
           MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           MY_GITHUB_ACTOR: ${{ secrets.MY_GITHUB_ACTOR }}
 
+  sonarqube:
+    name: sonarqube
+    uses: ./.github/workflows/test-quality.yaml
+
   deploy:
     runs-on: ubuntu-latest
     needs: [publish]
