@@ -1,38 +1,48 @@
 package com.epsi.msprbackendresellers.services.impl
 
 import com.epsi.msprbackendresellers.services.NotificationService
-import com.sendgrid.Method
-import com.sendgrid.Request
-import com.sendgrid.Response
-import com.sendgrid.SendGrid
-import com.sendgrid.helpers.mail.Mail
-import com.sendgrid.helpers.mail.objects.Content
-import com.sendgrid.helpers.mail.objects.Email
+import io.github.g0dkar.qrcode.QRCode
+import org.simplejavamail.api.email.Email
+import org.simplejavamail.email.EmailBuilder
+import org.simplejavamail.mailer.MailerBuilder
 import org.springframework.stereotype.Service
-import java.io.IOException
+import java.io.FileOutputStream
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.*
+
 
 @Service
 class NotificationServiceImpl : NotificationService {
-    override fun sendMail(addTo: String, sendTo: String, subject_mail: String, token: String): Response {
-        val from = Email(addTo)
-        val subject = subject_mail
-        val to = Email(sendTo)
-        val content = Content("text/plain", "https://barcode.tec-it.com/fr/QRCode?data=${token}")
-        val mail = Mail(from, subject, to, content)
+    override fun sendMail(addTo: String, sendTo: String, subjectMail: String, token: String): Boolean{
+        getQRCode(token)
+        // java.nio.file.Path path
+        val path = Path.of("codeqr.png")
+        val bytes = Files.readAllBytes(path)
+        val base64EncodedImageBytes: String = Base64.getEncoder().encodeToString(bytes)
 
-        val sg = SendGrid("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")
-        val request = Request()
-        try {
-            request.setMethod(Method.POST)
-            request.setEndpoint("mail/send")
-            request.setBody(mail.build())
-            val response: Response = sg.api(request)
-            System.out.println(response.getStatusCode())
-            System.out.println(response.getBody())
-            System.out.println(response.getHeaders())
-            return response
-        } catch (ex: IOException) {
-            throw ex
+
+        val email: Email = EmailBuilder.startingBlank()
+                .from("mspr", addTo)
+                .to("", sendTo)
+                .withSubject(subjectMail)
+                .withHTMLText("<div>\n" +
+                        "  <p>Your QR authentication code</p>\n" +
+                        "  <img src=\"data:image/png;base64," + base64EncodedImageBytes + " \" alt=\"Red dot\" />\n" +
+                        "</div>")
+                .buildEmail()
+
+        var mailer = MailerBuilder
+                .withSMTPServer("smtp.freesmtpservers.com", 25).buildMailer()
+        mailer.sendMail(email);
+        return true
+    }
+
+    fun getQRCode(token: String) {
+        FileOutputStream("codeqr.png").use {
+            QRCode(token)
+                    .render()
+                    .writeImage(it)
         }
     }
 }
