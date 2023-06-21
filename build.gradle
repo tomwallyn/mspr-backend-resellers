@@ -34,6 +34,8 @@ dependencies {
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
     implementation 'com.sendgrid:sendgrid-java:4.9.3'
     implementation "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
+    implementation 'org.simplejavamail:simple-java-mail:8.1.1'
+    implementation("io.github.g0dkar:qrcode-kotlin-jvm:3.3.0")
 }
 
 jacoco {
